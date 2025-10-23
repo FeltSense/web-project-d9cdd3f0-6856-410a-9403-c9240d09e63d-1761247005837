@@ -1,9 +1,60 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, FormEvent } from 'react'
+import { CheckCircle, AlertCircle, Loader2, Send, MapPin, Phone, Mail } from 'lucide-react'
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [formStatus, setFormStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
+  const [errorMessage, setErrorMessage] = useState<string>('')
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setFormStatus('loading')
+    setErrorMessage('')
+
+    const form = e.currentTarget as HTMLFormElement
+    
+    const formData = {
+      name: (form.querySelector('#name') as HTMLInputElement).value,
+      email: (form.querySelector('#email') as HTMLInputElement).value,
+      phone: (form.querySelector('#phone') as HTMLInputElement).value,
+      company: (form.querySelector('#company') as HTMLInputElement).value,
+      budget: (form.querySelector('#budget') as HTMLSelectElement).value,
+      services: (form.querySelector('#services') as HTMLSelectElement).value,
+      message: (form.querySelector('#message') as HTMLTextAreaElement).value,
+      source: 'Nexus AI Labs Contact Form',
+      industry: 'Marketing'
+    }
+
+    try {
+      const response = await fetch('https://deep-api-server-2moiw.kinsta.app/api/form-submissions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      if (!response.ok) {
+        throw new Error('Submission failed')
+      }
+
+      setFormStatus('success')
+      form.reset()
+      
+      setTimeout(() => {
+        setFormStatus('idle')
+      }, 5000)
+    } catch (error) {
+      setFormStatus('error')
+      setErrorMessage('Failed to submit form. Please try again or contact us directly.')
+      
+      setTimeout(() => {
+        setFormStatus('idle')
+      }, 5000)
+    }
+  }
 
   return (
     <main className="min-h-screen bg-white">
@@ -425,7 +476,7 @@ export default function HomePage() {
           <span className="text-red-500 font-semibold text-sm uppercase">Before Nexus AI Labs</span>
         </div>
         <p className="text-slate-700 italic">
-          "Our campaign planning took weeks, and we struggled to predict which content would resonate. ROI tracking was a nightmare with scattered data across multiple platforms."
+          &quot;Our campaign planning took weeks, and we struggled to predict which content would resonate. ROI tracking was a nightmare with scattered data across multiple platforms.&quot;
         </p>
       </div>
 
@@ -445,7 +496,7 @@ export default function HomePage() {
           <span className="text-green-300 font-semibold text-sm uppercase">After Nexus AI Labs</span>
         </div>
         <p className="text-white italic">
-          "Nexus AI Labs cut our planning time by 70%. The AI predicts engagement with 94% accuracy, and unified analytics give us real-time ROI insights. Our conversion rates jumped 156% in just three months!"
+          &quot;Nexus AI Labs cut our planning time by 70%. The AI predicts engagement with 94% accuracy, and unified analytics give us real-time ROI insights. Our conversion rates jumped 156% in just three months!&quot;
         </p>
         <div className="flex gap-1 mt-4">
           {[...Array(5)].map((_, i) => (
@@ -475,7 +526,7 @@ export default function HomePage() {
           <span className="text-red-500 font-semibold text-sm uppercase">Before Nexus AI Labs</span>
         </div>
         <p className="text-slate-700 italic">
-          "Managing personalization at scale was impossible. Our team spent countless hours segmenting audiences manually, and even then, our messaging felt generic and underperformed."
+          &quot;Managing personalization at scale was impossible. Our team spent countless hours segmenting audiences manually, and even then, our messaging felt generic and underperformed.&quot;
         </p>
       </div>
 
@@ -495,7 +546,7 @@ export default function HomePage() {
           <span className="text-green-300 font-semibold text-sm uppercase">After Nexus AI Labs</span>
         </div>
         <p className="text-white italic">
-          "Nexus AI Labs automated our entire personalization engine. We now deliver hyper-targeted content to 50,000+ segments effortlessly. Email open rates increased 89%, and our team focuses on strategy instead of manual tasks."
+          &quot;Nexus AI Labs automated our entire personalization engine. We now deliver hyper-targeted content to 50,000+ segments effortlessly. Email open rates increased 89%, and our team focuses on strategy instead of manual tasks.&quot;
         </p>
         <div className="flex gap-1 mt-4">
           {[...Array(5)].map((_, i) => (
@@ -525,7 +576,7 @@ export default function HomePage() {
           <span className="text-red-500 font-semibold text-sm uppercase">Before Nexus AI Labs</span>
         </div>
         <p className="text-slate-700 italic">
-          "Our ad spend was bleeding money. We couldn't identify which channels drove real conversions, and A/B testing took forever. Budget allocation was basically guesswork."
+          &quot;Our ad spend was bleeding money. We couldn&apos;t identify which channels drove real conversions, and A/B testing took forever. Budget allocation was basically guesswork.&quot;
         </p>
       </div>
 
@@ -545,7 +596,7 @@ export default function HomePage() {
           <span className="text-green-300 font-semibold text-sm uppercase">After Nexus AI Labs</span>
         </div>
         <p className="text-white italic">
-          "Nexus AI Labs' predictive analytics transformed our ad strategy. We now optimize spend in real-time across 12 channels. Our cost per acquisition dropped 43%, and we're scaling campaigns with confidence backed by data."
+          &quot;Nexus AI Labs&apos; predictive analytics transformed our ad strategy. We now optimize spend in real-time across 12 channels. Our cost per acquisition dropped 43%, and we&apos;re scaling campaigns with confidence backed by data.&quot;
         </p>
         <div className="flex gap-1 mt-4">
           {[...Array(5)].map((_, i) => (
@@ -637,7 +688,7 @@ export default function HomePage() {
 
         {/* Bottom Tier - Features Section */}
         <div className="bg-gradient-to-br from-slate-900/90 to-purple-950/50 px-8 py-12">
-          <h4 className="text-xl font-bold text-white mb-6 text-center">What's Included</h4>
+          <h4 className="text-xl font-bold text-white mb-6 text-center">What&apos;s Included</h4>
           <div className="grid md:grid-cols-2 gap-4 max-w-3xl mx-auto">
             <div className="flex items-start gap-3 bg-slate-800/50 p-4 rounded-xl border border-purple-500/20 hover:border-purple-500/40 transition-colors">
               <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
@@ -735,499 +786,8 @@ export default function HomePage() {
 </section>
       
       {/* Contact Form - Supabase Integration */}
-      <'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [errorMessage, setErrorMessage] = useState<string>('');
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setFormStatus('loading');
-    setErrorMessage('');
-
-    const form = e.currentTarget as HTMLFormElement;
-    
-    const formData = {
-      name: (form.querySelector('#name') as HTMLInputElement).value,
-      email: (form.querySelector('#email') as HTMLInputElement).value,
-      phone: (form.querySelector('#phone') as HTMLInputElement).value,
-      company: (form.querySelector('#company') as HTMLInputElement).value,
-      budget: (form.querySelector('#budget') as HTMLSelectElement).value,
-      services: (form.querySelector('#services') as HTMLSelectElement).value,
-      message: (form.querySelector('#message') as HTMLTextAreaElement).value,
-      source: 'Nexus AI Labs Contact Form',
-      industry: 'Marketing'
-    };
-
-    try {
-      const response = await fetch('https://deep-api-server-2moiw.kinsta.app/api/form-submissions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Submission failed');
-      }
-
-      setFormStatus('success');
-      form.reset();
-      
-      setTimeout(() => {
-        setFormStatus('idle');
-      }, 5000);
-    } catch (error) {
-      setFormStatus('error');
-      setErrorMessage('Failed to submit form. Please try again or contact us directly.');
-      
-      setTimeout(() => {
-        setFormStatus('idle');
-      }, 5000);
-    }
-  };
-
-  return (
-    <section className="relative py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 overflow-hidden">
+      <section className="relative py-24 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-500 rounded-full blur-3xl animate-pulse delay-1000"></div>
-      </div>
-
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-5xl font-bold text-white mb-4">
-            Let's Transform Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Marketing Strategy</span>
-          </h2>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Partner with Nexus AI Labs to leverage cutting-edge AI solutions that drive measurable results for your marketing campaigns
-          </p>
-        </div>
-
-        {/* Split Layout */}
-        <div className="grid lg:grid-cols-2 gap-8 items-start">
-          {/* Contact Form */}
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 shadow-2xl">
-            <div className="mb-8">
-              <h3 className="text-2xl font-bold text-white mb-2">Get Started Today</h3>
-              <p className="text-gray-300">Fill out the form and our AI marketing experts will reach out within 24 hours</p>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-200 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="John Doe"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-200 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="john@company.com"
-                  />
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-200 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    name="phone"
-                    required
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="+1 (555) 000-0000"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-200 mb-2">
-                    Company Name
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                    placeholder="Your Company"
-                  />
-                </div>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="budget" className="block text-sm font-medium text-gray-200 mb-2">
-                    Monthly Marketing Budget
-                  </label>
-                  <select
-                    id="budget"
-                    name="budget"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  >
-                    <option value="" className="bg-slate-800">Select budget range</option>
-                    <option value="under-5k" className="bg-slate-800">Under $5,000</option>
-                    <option value="5k-15k" className="bg-slate-800">$5,000 - $15,000</option>
-                    <option value="15k-50k" className="bg-slate-800">$15,000 - $50,000</option>
-                    <option value="50k-plus" className="bg-slate-800">$50,000+</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="services" className="block text-sm font-medium text-gray-200 mb-2">
-                    Service Interest
-                  </label>
-                  <select
-                    id="services"
-                    name="services"
-                    className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-                  >
-                    <option value="" className="bg-slate-800">Select a service</option>
-                    <option value="ai-content" className="bg-slate-800">AI Content Generation</option>
-                    <option value="predictive-analytics" className="bg-slate-800">Predictive Analytics</option>
-                    <option value="customer-segmentation" className="bg-slate-800">Customer Segmentation</option>
-                    <option value="chatbot-automation" className="bg-slate-800">Chatbot Automation</option>
-                    <option value="full-suite" className="bg-slate-800">Full AI Marketing Suite</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-200 mb-2">
-                  Project Details
-                </label>
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={4}
-                  className="w-full px-4 py-3 bg-white/5 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"
-                  placeholder="Tell us about your marketing goals and challenges..."
-                ></textarea>
-              </div>
-
-              {/* Status Messages */}
-              {formStatus === 'success' && (
-                <div className="flex items-center gap-3 p-4 bg-green-500/20 border border-green-500/50 rounded-lg">
-                  <CheckCircle className="w-5 h-5 text-green-400 flex-shrink-0" />
-                  <p className="text-green-300 text-sm">Thank you! We'll contact you within 24 hours.</p>
-                </div>
-              )}
-
-              {formStatus === 'error' && (
-                <div className="flex items-center gap-3 p-4 bg-red-500/20 border border-red-500/50 rounded-lg">
-                  <AlertCircle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                  <p className="text-red-300 text-sm">{errorMessage}</p>
-                </div>
-              )}
-
-              <button
-                type="submit"
-                disabled={formStatus === 'loading'}
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold py-4 px-6 rounded-lg hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-slate-900 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-              >
-                {formStatus === 'loading' ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    Submitting...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Start Your AI Journey
-                  </>
-                )}
-              </button>
-
-              <p className="text-xs text-gray-400 text-center">
-                By submitting this form, you agree to our privacy policy and terms of service
-              </p>
-            </form>
-          </div>
-
-          {/* Map & Contact Info */}
-          <div className="space-y-8">
-            {/* Map */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/20 shadow-2xl h-[400px]">
-              <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.9476519598093!2d-73.99185368459395!3d40.74844097932847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b3117469%3A0xd134e199a405a163!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1635180000000!5m2!1sen!2sus"
-                width="100%"
-                height="100%"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                title="Nexus AI Labs Location"
-                className="grayscale hover:grayscale-0 transition-all duration-300"
-              ></iframe>
-            </div>
-
-            {/* Contact Information */}
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 shadow-2xl">
-              <h3 className="text-2xl font-bold text-white mb-6">Contact Information</h3>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <MapPin className="w-6 h-6 text-blue-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Office Location</h4>
-                    <p className="text-gray-300">350 Fifth Avenue, New York, NY 10118</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-purple-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Phone className="w-6 h-6 text-purple-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Phone</h4>
-                    <p className="text-gray-300">+1 (555) 123-4567</p>
-                    <p className="text-sm text-gray-400 mt-1">Mon-Fri, 9am-6pm EST</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Mail className="w-6 h-6 text-green-400" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-semibold mb-1">Email</h4>
-                    <p className="text-gray-300">hello@nexusailabs.com</p>
-                    <p className="text-sm text-gray-400 mt-1">We respond within 24 hours</p>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-8 border-t border-white/20">
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  <span className="font-semibold text-white">Nexus AI Labs</span> is revolutionizing marketing with AI-powered solutions. Join over 500+ brands that trust us to deliver exceptional results.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-      
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-      {/* Left Side - CTA/Newsletter */}
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent mb-2">
-            Nexus AI Labs
-          </h2>
-          <p className="text-slate-300 text-lg mb-6">
-            Transforming marketing with cutting-edge AI solutions
-          </p>
-        </div>
-        
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-lg p-6 border border-slate-700">
-          <h3 className="text-xl font-semibold mb-3">Stay Ahead of the Curve</h3>
-          <p className="text-slate-400 mb-4">
-            Get the latest AI marketing insights and product updates delivered to your inbox.
-          </p>
-          <form className="space-y-3">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="w-full px-4 py-3 bg-slate-900 border border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white placeholder-slate-500"
-            />
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
-            >
-              Subscribe Now
-            </button>
-          </form>
-        </div>
-
-        <div className="space-y-2 text-slate-400">
-          <p className="flex items-center gap-2">
-            <span className="text-blue-400">📧</span>
-            <a href="mailto:hello@nexusailabs.com" className="hover:text-white transition-colors">
-              hello@nexusailabs.com
-            </a>
-          </p>
-          <p className="flex items-center gap-2">
-            <span className="text-blue-400">📞</span>
-            <a href="tel:+1-555-AI-NEXUS" className="hover:text-white transition-colors">
-              +1 (555) AI-NEXUS
-            </a>
-          </p>
-          <p className="flex items-center gap-2">
-            <span className="text-blue-400">📍</span>
-            <span>San Francisco, CA 94105</span>
-          </p>
-        </div>
-      </div>
-
-      {/* Right Side - Navigation Links */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
-        <div>
-          <h4 className="text-lg font-semibold mb-4 text-blue-400">Solutions</h4>
-          <ul className="space-y-3">
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                AI Content Generation
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Predictive Analytics
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Customer Insights
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Campaign Optimization
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Marketing Automation
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-lg font-semibold mb-4 text-blue-400">Company</h4>
-          <ul className="space-y-3">
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                About Us
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Careers
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Case Studies
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Blog
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Press Kit
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-lg font-semibold mb-4 text-blue-400">Resources</h4>
-          <ul className="space-y-3">
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Documentation
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                API Reference
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Support Center
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Privacy Policy
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-slate-400 hover:text-white transition-colors">
-                Terms of Service
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    {/* Social Media Links */}
-    <div className="mt-12 pt-8 border-t border-slate-700">
-      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-        <p className="text-slate-400 text-sm">
-          © {new Date().getFullYear()} Nexus AI Labs. All rights reserved.
-        </p>
-        <div className="flex items-center gap-4">
-          <a
-            href="#"
-            className="w-10 h-10 bg-slate-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors"
-            aria-label="LinkedIn"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-            </svg>
-          </a>
-          <a
-            href="#"
-            className="w-10 h-10 bg-slate-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors"
-            aria-label="Twitter"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
-            </svg>
-          </a>
-          <a
-            href="#"
-            className="w-10 h-10 bg-slate-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors"
-            aria-label="GitHub"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
-            </svg>
-          </a>
-          <a
-            href="#"
-            className="w-10 h-10 bg-slate-800 hover:bg-blue-600 rounded-full flex items-center justify-center transition-colors"
-            aria-label="YouTube"
-          >
-            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-            </svg>
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
-    </main>
-  )
-}
+        <div className="absolute bottom-0 right-1
